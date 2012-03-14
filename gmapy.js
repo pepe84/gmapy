@@ -3,11 +3,21 @@
  * @author https://github.com/pepe84
  */
 function Gmapy(map) {
-    
     // Private
     var _geocoder,
+        _markers = [],
         _lastMarker,
         _lastInfo;
+    
+    function _setMarkersMap(map) {
+        if (_markers.length) {
+            for (var i in _markers) {
+                if (_markers[i].setMap) {
+                    _markers[i].setMap(map);
+                }
+            }
+        }
+    }
     
     // Public
     return {
@@ -20,8 +30,12 @@ function Gmapy(map) {
             if (icon) {
                 opts.icon = icon;
             }
+            var marker = new google.maps.Marker(opts);
             
-            return new google.maps.Marker(opts);
+            // Maintain markers list
+            _markers.push(marker);
+            
+            return marker;
         },
         addInfoWindow: function (text, marker, callback) {
             var info = new google.maps.InfoWindow({
@@ -54,6 +68,19 @@ function Gmapy(map) {
                     }
                 });
             }
+        },
+        clearOverlays: function () {
+            // Removes the overlays from the map, but keeps them in the array
+            _setMarkersMap(null);
+        },
+        showOverlays: function () {
+            // Shows any overlays currently in the array
+            _setMarkersMap(map);
+        },
+        deleteOverlays: function () {
+            // Deletes all markers in the array by removing references to them
+            this.clearOverlays();
+            _markers = [];
         }
     };
 }

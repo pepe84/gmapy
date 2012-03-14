@@ -33,13 +33,25 @@
         var gmapy = new Gmapy(map);    
         var input = document.getElementById('address');
         var button = document.getElementById('submit');
+        var clear = document.getElementById('clear');
+        var show = document.getElementById('show');
+        var reset = document.getElementById('reset');
         button.addEventListener('click', function(){
             gmapy.getCoordsByAddress(input.value, function(lat, lng){
                 var marker = gmapy.addMarker(input.value, lat, lng);
                 var info = gmapy.addInfoWindow('Coords: ' + lat + ', ' + lng, marker);
                 info.open(map, marker);
             });
-        },false)
+        },false);
+        clear.addEventListener('click', function(){
+            gmapy.clearOverlays();
+        },false);
+        show.addEventListener('click', function(){
+            gmapy.showOverlays();
+        },false);
+        reset.addEventListener('click', function(){
+            gmapy.deleteOverlays();
+        },false);
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
@@ -49,6 +61,9 @@
     <h1>Gmapy test</h1>
     <input id="address" name="address" type="text" value="Pl Frances Macia, Barcelona, Spain"/>
     <button id="submit" name="submit">Locate me!</button>
+    <button id="clear" name="submit">Clear markers</button>
+    <button id="show" name="submit">Show cleared markers</button>
+    <button id="reset" name="submit">Delete markers</button>
     <div id="map_canvas"></div>
   </body>
 </html>
